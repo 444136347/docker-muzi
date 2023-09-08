@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  muzi:
+    build: ./
+    container_name: muzi_space
+    ports:
+      - "8080:80"
+    volumes:
+      - /Users/lidongbin/code/ldb/code:/data/web/:cached
+      - ./conf/nginx/conf.d:/usr/local/openresty/nginx/conf/conf.d
+      - ./conf/nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+    depends_on:   # 容器依赖
+      - redis
+      - mysql
+  mysql:
+    image: mysql:5.7
+    # network_mode: "host" # 如果需要容器使用宿主机IP(内网IP)，则可以配置此项
+    container_name: muzi_mysql # 指定容器名称，如果不设置此参数，则由系统自动生成
+    restart: always # 设置容器自启模式
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci  # 设置utf8字符集
+    environment:
+      - TZ=Asia/Shanghai # 设置容器时区与宿主机保持一致
+      - MYSQL_ROOT_PASSWORD=root # 设置root密码
+    volumes:
+      - ./data/mysql/:/var/lib/mysql
+    ports:
+      - "33062:3306"
+  redis:
+    image: redis:latest
+    container_name: muzi_redis
+    restart: always
+    environment:
+      TZ: "Asia/Shanghai"
+    ports:
+      - "63792:6379"
