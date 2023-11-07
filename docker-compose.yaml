@@ -5,7 +5,7 @@ services:
     build: ./
     container_name: muzi_space
     ports:
-      - "8080:80"
+      - "8001:80"
     volumes:
       - /Users/lidongbin/code/ldb/code:/data/web/:cached
       - ./conf/nginx/conf.d:/usr/local/openresty/nginx/conf/conf.d

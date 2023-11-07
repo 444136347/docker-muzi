@@ -80,8 +80,8 @@ RUN bash -c "mkdir -p /log/laravel" && bash -c "mkdir -p /log/misc" && bash -c "
 
 RUN yum clean all
 
-RUN echo '127.0.0.1 local.navigation.com' >> /etc/hosts
+#RUN echo '127.0.0.1 local.navigation.com' >> /etc/hosts
 
-EXPOSE 8080
+EXPOSE 8001
 
 CMD /usr/bin/supervisord && tail -f
