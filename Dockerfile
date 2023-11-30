@@ -8,7 +8,7 @@ RUN yum -y install libxml2 libxml2-devel oniguruma oniguruma-devel sqlite-devel 
 
 ADD /src/php-7.4.30.tar.gz /
 RUN cd /php-7.4.30 && ./buildconf --force
-RUN cd /php-7.4.30 && ./configure --prefix=/usr/local/php --exec-prefix=/usr/local/php --bindir=/usr/local/php/bin --sbindir=/usr/local/php/sbin --includedir=/usr/local/php/include --libdir=/usr/local/php/lib/php --mandir=/usr/local/php/php/man --with-config-file-path=/usr/local/php/etc --with-mysql-sock=/var/run/mysql/mysql.sock --with-mcrypt=/usr/include --with-mhash --with-openssl --with-mysql=shared,mysqlnd --with-mysqli=shared,mysqlnd --with-pdo-mysql=shared,mysqlnd  --with-iconv --with-zlib --enable-zip --enable-inline-optimization --disable-rpath --enable-shared --enable-xml --enable-bcmath --enable-shmop --enable-sysvsem --enable-mbregex --enable-mbstring --enable-ftp --enable-pcntl --enable-sockets --with-xmlrpc --enable-soap --without-pear --with-gettext --enable-session --with-curl --enable-gd --with-jpeg --with-freetyp --enable-opcache --enable-fpm --enable-fastcgi --with-fpm-user=php --with-fpm-group=php --without-gdbm --enable-fileinfo --enable-embed --enable-dl
+RUN cd /php-7.4.30 && ./configure --prefix=/usr/local/php --exec-prefix=/usr/local/php --bindir=/usr/local/php/bin --sbindir=/usr/local/php/sbin --includedir=/usr/local/php/include --libdir=/usr/local/php/lib/php --mandir=/usr/local/php/php/man --with-config-file-path=/usr/local/php/etc --with-mysql-sock=/var/run/mysql/mysql.sock --with-mcrypt=/usr/include --with-mhash --with-openssl --with-mysql=shared,mysqlnd --with-mysqli=shared,mysqlnd --with-pdo-mysql=shared,mysqlnd  --with-iconv --with-zlib --enable-zip --enable-inline-optimization --disable-rpath --enable-shared --enable-xml --enable-bcmath --enable-shmop --enable-sysvsem --enable-mbregex --enable-mbstring --enable-ftp --enable-pcntl --enable-sockets --with-xmlrpc --enable-soap --without-pear --with-gettext --enable-session --with-curl --enable-gd --with-jpeg --with-freetype --enable-opcache --enable-fpm --enable-fastcgi --with-fpm-user=php --with-fpm-group=php --without-gdbm --enable-fileinfo --enable-embed --enable-dl
 RUN cd /php-7.4.30 && make clean && make && make install && cp php.ini-production /usr/local/php/etc/php.ini
 RUN cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf && cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf
 RUN cp /php-7.4.30/sapi/fpm/init.d.php-fpm /usr/local/bin/php-fpm.sh && chmod +x /usr/local/bin/php-fpm.sh
@@ -79,6 +79,10 @@ RUN sed -i "s/nodaemon=false/nodaemon=true/g" /etc/supervisord.conf
 RUN bash -c "mkdir -p /log/laravel" && bash -c "mkdir -p /log/misc" && bash -c "mkdir -p /log/phalcon" && bash -c "chmod 0777 -R /log"
 
 RUN yum clean all
+
+# 设置上传文件大小最大为1024m
+RUN echo 'post_max_size=1024M' >> /usr/local/php/etc/php.ini
+RUN echo 'upload_max_filesize=1024M' >> /usr/local/php/etc/php.ini
 
 #RUN echo '127.0.0.1 local.navigation.com' >> /etc/hosts
 
